@@ -14,3 +14,36 @@ if (supabaseUrl && supabaseAnonKey) {
 }
 
 export { supabase };
+
+// 認証ヘルパー関数
+export async function signInWithGoogle() {
+  if (!supabase) {
+    throw new Error('Supabase is not configured');
+  }
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
+    },
+  });
+
+  if (error) throw error;
+  return data;
+}
+
+export async function signOut() {
+  if (!supabase) {
+    throw new Error('Supabase is not configured');
+  }
+
+  const { error } = await supabase.auth.signOut();
+  if (error) throw error;
+}
+
+export async function getCurrentUser() {
+  if (!supabase) return null;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  return user;
+}
