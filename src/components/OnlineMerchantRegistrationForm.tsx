@@ -34,6 +34,7 @@ interface MerchantFormData {
   url: string;
   description: string;
   serviceType: string;
+  serviceTypeOther: string;
   country: string;
   // STEP2
   jpycUseCase: string;
@@ -49,6 +50,7 @@ const initialFormData: MerchantFormData = {
   url: '',
   description: '',
   serviceType: '',
+  serviceTypeOther: '',
   country: '',
   jpycUseCase: '',
   jpycUseCaseOther: '',
@@ -176,10 +178,17 @@ export default function OnlineMerchantRegistrationForm() {
         platforms.push(formData.platformOther.trim());
       }
 
+      // descriptionに「その他」の内容を追記
+      let description = formData.description.trim();
+      if (formData.serviceType === 'その他' && formData.serviceTypeOther.trim()) {
+        const otherNote = `【サービス種別補足】${formData.serviceTypeOther.trim()}`;
+        description = description ? `${description}\n\n${otherNote}` : otherNote;
+      }
+
       const { error: insertError } = await supabase.from('online_merchants').insert({
         name: formData.name.trim(),
         url: formData.url.trim(),
-        description: formData.description.trim() || null,
+        description: description || null,
         service_type: formData.serviceType,
         country: formData.country.trim() || null,
         jpyc_use_case: jpycUseCase,
@@ -340,6 +349,16 @@ export default function OnlineMerchantRegistrationForm() {
                   </option>
                 ))}
               </select>
+              {formData.serviceType === 'その他' && (
+                <input
+                  type="text"
+                  name="serviceTypeOther"
+                  value={formData.serviceTypeOther}
+                  onChange={handleInputChange}
+                  placeholder="サービス種別を入力（備考として保存）"
+                  className="mt-2 w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                />
+              )}
             </div>
 
             <div>
@@ -511,7 +530,12 @@ export default function OnlineMerchantRegistrationForm() {
                 </div>
                 <div>
                   <dt className="text-gray-500 dark:text-gray-400">サービス種別</dt>
-                  <dd className="text-gray-900 dark:text-white">{formData.serviceType}</dd>
+                  <dd className="text-gray-900 dark:text-white">
+                    {formData.serviceType}
+                    {formData.serviceType === 'その他' && formData.serviceTypeOther && (
+                      <span className="text-gray-500 dark:text-gray-400">（{formData.serviceTypeOther}）</span>
+                    )}
+                  </dd>
                 </div>
                 <div className="sm:col-span-2">
                   <dt className="text-gray-500 dark:text-gray-400">URL</dt>
