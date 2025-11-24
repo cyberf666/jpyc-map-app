@@ -25,8 +25,8 @@ const Popup = dynamic(
   { ssr: false }
 );
 
-// ダミーデータを使用するかどうかのフラグ（開発時はtrueに設定）
-const USE_DUMMY_DATA = true;
+// ダミーデータを使用するかどうかのフラグ（Supabase未設定時はtrue）
+const USE_DUMMY_DATA = false;
 
 // 2点間の距離を計算（Haversine formula、km単位）
 function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {

@@ -6,8 +6,8 @@ import { OnlineMerchant } from '@/types';
 import { supabase } from '@/lib/supabaseClient';
 import { dummyOnlineMerchants } from '@/lib/dummyData';
 
-// ダミーデータを使用するかどうかのフラグ（開発時はtrueに設定）
-const USE_DUMMY_DATA = true;
+// ダミーデータを使用するかどうかのフラグ（Supabase未設定時はtrue）
+const USE_DUMMY_DATA = false;
 
 export default function OnlineMerchantsTab() {
   const [merchants, setMerchants] = useState<OnlineMerchant[]>([]);
